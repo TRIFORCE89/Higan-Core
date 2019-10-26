@@ -117,20 +117,19 @@
         _interface->loadMedia(romName, systemName, OEGameBoySystem, mediaID);
         importGameBoy(_interface->path(mediaID), buffer);
 
-        /* Super Game Boy support is broken in v094
+        // Super Game Boy support is broken in v094
         string sgbRomPath = {biosPath, "/Super Game Boy (World).sfc"};
         string sgbBootRomPath = {biosPath, "/sgb.rom"};
         bool sgbAvailable = file::exists(sgbRomPath) && file::exists(sgbBootRomPath);
-        
+
         // Check for Super Game Boy header
         if(sgbAvailable && (buffer[0x0146] & 0x03) == 0x03)
         {
             buffer = file::read(sgbRomPath);
-            
+
             _interface->loadMedia("Super Game Boy (World).sfc", "Super Famicom", OESuperFamicomSystem, SuperFamicom::ID::SuperFamicom);
             importSuperFamicom(_interface->path(SuperFamicom::ID::SuperFamicom), biosPath, buffer);
         }
-        */
     }
     else if([[self systemIdentifier] isEqualToString:@"openemu.system.nes"])
     {
@@ -243,7 +242,7 @@
     const uint8_t *stateBytes = (const uint8_t *)[state bytes];
     unsigned int stateLength = [state length];
     serializer stateToLoad(stateBytes, stateLength);
-    
+
     if(_interface->active->unserialize(stateToLoad))
         return YES;
 
@@ -260,10 +259,10 @@
 {
     serializer state = _interface->active->serialize();
     NSData *stateData = [NSData dataWithBytes:state.data() length:state.size()];
-    
+
     __autoreleasing NSError *error = nil;
     BOOL success = [stateData writeToFile:fileName options:NSDataWritingAtomic error:&error];
-    
+
     block(success, success ? nil : error);
 }
 
@@ -271,13 +270,13 @@
 {
     __autoreleasing NSError *error = nil;
     NSData *state = [NSData dataWithContentsOfFile:fileName options:NSDataReadingMappedIfSafe | NSDataReadingUncached error:&error];
-    
+
     if(state == nil)
     {
         block(NO, error);
         return;
     }
-    
+
     serializer stateToLoad((const uint8_t *)[state bytes], [state length]);
     if(!_interface->active->unserialize(stateToLoad))
     {
@@ -288,7 +287,7 @@
         block(NO, error);
         return;
     }
-    
+
     block(YES, nil);
 }
 
@@ -384,18 +383,18 @@ NSMutableDictionary *cheatList = [[NSMutableDictionary alloc] init];
 - (void)setCheat:(NSString *)code setType:(NSString *)type setEnabled:(BOOL)enabled
 {
     lstring list;
-    
+
     if (enabled)
         [cheatList setValue:@YES forKey:code];
     else
         [cheatList removeObjectForKey:code];
-    
+
     for (id key in cheatList)
     {
         if ([[cheatList valueForKey:key] isEqual:@YES])
             list.append([key UTF8String]);
     }
-    
+
     _interface->active->cheatSet(list);
 }
 
