@@ -200,8 +200,6 @@
 		<key>openemu.system.snes</key>
 		<string>org.openemu.BSNES</string>
 	</dict>
-	<key>OESupportDeadline</key>
-	<date>2020-06-01T00:00:00Z</date>
 	<key>OESystemIdentifiers</key>
 	<array>
 		<string>openemu.system.snes</string>
